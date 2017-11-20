@@ -8,8 +8,8 @@ namespace CompetitionsInformer
 {
     public enum Tour
     {
-        QuarterFinals = 1,
-        SemiFinals,
-        Finals
+        QuarterFinals = 10,
+        SemiFinals = 5,
+        Finals = 3
     }
 }

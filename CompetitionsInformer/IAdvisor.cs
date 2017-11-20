@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace CompetitionsInformer
 {
-    public abstract class Person
+    public interface IAdvisor
     {
-        public string Name { get; }
-
-        public Person(string name)
-        {
-            Name = name;
-        }
+        Subject Subject { get; }
     }
 }
