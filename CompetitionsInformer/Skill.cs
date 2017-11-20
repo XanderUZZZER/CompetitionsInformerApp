@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CompetitionsInformer
 {
-    public class Skill
+    class Skill
     {
-        private static Random luck = new Random();
+        private static Random level = new Random();
         private Dictionary<Subject, int> skills = new Dictionary<Subject, int>();
 
         public int this[Subject subject]
@@ -38,7 +38,7 @@ namespace CompetitionsInformer
             if (!skills.ContainsKey(subject))
             {
                 Thread.Sleep(100);
-                skills[subject] = luck.Next(1000 , 100000) / 1000;
+                skills[subject] = level.Next(1000 , 100000) / 1000;
             }
         }
 

@@ -29,7 +29,7 @@ namespace Testing
             Student s9 = new Student("Student9");
             Student s10 = new Student("Student10");
             Student s11 = new Student("Student11");
-            Competition ci = new Competition("Inform open", Subject.ComputerScience, "KNURE", DateTime.Parse("2017/12/25"), Region.Local);
+            Competition ci = new Competition("Inform open", Subject.ComputerScience, "KNURE", DateTime.Parse("2017/12/25"), RegionLevel.Local);
             s1.AddSkill(Subject.ComputerScience);
             s2.AddSkill(Subject.ComputerScience);
             s3.AddSkill(Subject.ComputerScience);
@@ -55,6 +55,8 @@ namespace Testing
 
             ci.GetWinners();
             ci.CreateXML1();
+            //ci.CreateXML2();
+            
             Console.WriteLine("ending");
 
             Console.ReadLine();

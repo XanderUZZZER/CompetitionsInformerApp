@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompetitionsInformer
 {
-    public enum Region
+    public enum RegionLevel
     {
         Local,
         District,

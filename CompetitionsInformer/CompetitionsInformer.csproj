@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Competition.cs" />
     <Compile Include="IAdvisor.cs" />
+    <Compile Include="Informer.cs" />
     <Compile Include="IParticipant.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Professor.cs" />

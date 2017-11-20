@@ -16,7 +16,7 @@ namespace CompetitionsInformer
         public Subject Subject { get; }
         public string Place { get; }
         public DateTime Date { get; }
-        public Region RegionLevel { get; }
+        public RegionLevel RegionLevel { get; }
         public List<IParticipant> Participants { get; private set; }
         public Dictionary<Tour, List<IParticipant>> Winners { get; private set; } = new Dictionary<Tour, List<IParticipant>>();
 
@@ -26,12 +26,12 @@ namespace CompetitionsInformer
             Subject = Subject.Biology;
             Place = "Place";
             Date = new DateTime(2017, 11, 12);
-            RegionLevel = Region.Country;
+            RegionLevel = RegionLevel.Country;
             Participants = new List<IParticipant>();
             Winners = new Dictionary<Tour, List<IParticipant>>();
         }
 
-        public Competition(string name, Subject subject, string place, DateTime date, Region regionLevel)
+        public Competition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
         {
             Name = name;
             Subject = subject;
@@ -84,6 +84,12 @@ namespace CompetitionsInformer
 
             //сохраняем документ
             xdoc.Save($"{Name} - competition.xml");
+        }
+        public void CreateXML2()
+        {
+            //XmlSerializer xs = new XmlSerializer(typeof(Competition));
+            //using (Stream s = File.Create("test.xml"))
+            //    xs.Serialize(s, this);
         }
 
     }

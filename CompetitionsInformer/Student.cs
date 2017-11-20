@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,6 +66,14 @@ namespace CompetitionsInformer
             if (advisors.Contains(advisor))
             {
                 advisors.Remove(advisor);
+            }
+        }
+
+        public void Save()
+        {
+            using (StreamWriter sw = new StreamWriter("Students.txt"))
+            {
+                sw.WriteLine(this.Name);                
             }
         }
     }
