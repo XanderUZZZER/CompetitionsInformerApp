@@ -1,5 +1,6 @@
 ﻿using CompetitionsInformer;
 using System;
+using System.Collections.Generic;
 
 namespace Testing
 {
@@ -41,22 +42,51 @@ namespace Testing
             s9.AddSkill(Subject.ComputerScience);
             s10.AddSkill(Subject.ComputerScience);
             s11.AddSkill(Subject.ComputerScience);
-            ci.RegisterParticipant(s1);
-            ci.RegisterParticipant(s2);
-            ci.RegisterParticipant(s3);
-            ci.RegisterParticipant(s4);
-            ci.RegisterParticipant(s5);
-            ci.RegisterParticipant(s6);
-            ci.RegisterParticipant(s7);
-            ci.RegisterParticipant(s8);
-            ci.RegisterParticipant(s9);
-            ci.RegisterParticipant(s10);
-            ci.RegisterParticipant(s11);
+            List<Student> students = new List<Student>();
+            students.Add(s1);
+            students.Add(s2);
+            students.Add(s3);
+            students.Add(s4);
+            students.Add(s5);
+            students.Add(s6);
+            students.Add(s7);
+            students.Add(s8);
+            students.Add(s9);
+            students.Add(s10);
+            students.Add(s11);
+            //ci.RegisterParticipant((IParticipant)students);
+            //ci.RegisterParticipant(s1);
+            //ci.RegisterParticipant(s2);
+            //ci.RegisterParticipant(s3);
+            //ci.RegisterParticipant(s4);
+            //ci.RegisterParticipant(s5);
+            //ci.RegisterParticipant(s6);
+            //ci.RegisterParticipant(s7);
+            //ci.RegisterParticipant(s8);
+            //ci.RegisterParticipant(s9);
+            //ci.RegisterParticipant(s10);
+            //ci.RegisterParticipant(s11);
 
-            ci.GetWinners();
-            ci.CreateXML1();
-            //ci.CreateXML2();
-            
+            //ci.GetWinners();
+
+            //List<Student> s = new List<Student>();
+            //s = Student.LoadXML();
+
+            //foreach (var ss in s)
+            //{
+            //    Console.WriteLine(ss.Name);
+            //    foreach(var sss in ss.Skills)
+            //    {
+            //        Console.WriteLine(sss.Level);
+            //        Console.WriteLine(sss.Subject);
+            //    }
+            //}
+
+            s1.SaveXML();
+            s2.SaveXML1();
+            s3.SaveXML1();
+
+            Console.WriteLine();
             Console.WriteLine("ending");
 
             Console.ReadLine();

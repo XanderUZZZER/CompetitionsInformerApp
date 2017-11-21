@@ -9,7 +9,7 @@ namespace CompetitionsInformer
     public interface IParticipant
     {
         void AddSkill(Subject subject);
-        bool ContainsSkill(Subject subject);
+        bool HasSkill(Subject subject);
         int GetSkillLevel(Subject subject);
         void RemoveSkill(Subject subject);
     }

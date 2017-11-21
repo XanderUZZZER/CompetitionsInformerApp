@@ -7,52 +7,23 @@ using System.Threading.Tasks;
 
 namespace CompetitionsInformer
 {
-    class Skill
+    public class Skill
     {
-        private static Random level = new Random();
-        private Dictionary<Subject, int> skills = new Dictionary<Subject, int>();
-
-        public int this[Subject subject]
-        {
-            get
-            {
-                return skills[subject];
-            }
-            private set
-            {
-                skills[subject] = value;
-            }
-        }
-
-        public Skill()
-        {
-        }
+        private static Random luck = new Random();
+        
+        public Subject Subject { get; private set; }
+        public int Level { get; private set; }
 
         public Skill(Subject subject)
         {
-            Add(subject);
+            Subject = subject;
+            Level = luck.Next(1000, 100000) / 1000;
         }
 
-        public void Add(Subject subject)
+        public Skill(Subject subject, int level)
         {
-            if (!skills.ContainsKey(subject))
-            {
-                Thread.Sleep(100);
-                skills[subject] = level.Next(1000 , 100000) / 1000;
-            }
-        }
-
-        public bool Contains(Subject subject)
-        {
-            return skills.ContainsKey(subject);
-        }
-
-        public void Remove(Subject subject)
-        {
-            if (skills.ContainsKey(subject))
-            {
-                skills.Remove(subject);
-            }
+            Subject = subject;
+            Level = level;
         }
     }
 }

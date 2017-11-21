@@ -44,9 +44,17 @@ namespace CompetitionsInformer
         public void RegisterParticipant(IParticipant participant)
         {
             if ((!Participants.Contains(participant)) &&
-                (participant.ContainsSkill(Subject)))
+                (participant.HasSkill(Subject)))
             {
                 Participants.Add(participant);
+            }
+        }
+
+        public void RegisterParticipant(List<IParticipant> participants)
+        {
+            foreach (var participant in participants)
+            {
+                RegisterParticipant(participant);
             }
         }
 
@@ -61,36 +69,5 @@ namespace CompetitionsInformer
         {
             Winners[tour] = Participants.OrderByDescending(s => s.GetSkillLevel(Subject)).Take((int)tour).ToList();
         }
-
-        public void CreateXML1()
-        {
-            XDocument xdoc = new XDocument();
-            // создаем корневой элемент
-            XElement tour = new XElement("tour");
-            xdoc.Add(tour);
-            foreach (KeyValuePair<Tour, List<IParticipant>> kvp in Winners)
-            {
-                XElement currTour = new XElement(kvp.Key.ToString());
-                foreach (var p in kvp.Value)
-                {
-                    XElement winner = new XElement("winner");
-                    winner.Add(new XElement("name", ((Person)p).Name));
-                    winner.Add(new XElement("points", null));
-                    winner.Add(new XElement("skill", p.GetSkillLevel(Subject)));
-                    currTour.Add(winner);
-                }
-                tour.Add(currTour);
-            }
-
-            //сохраняем документ
-            xdoc.Save($"{Name} - competition.xml");
-        }
-        public void CreateXML2()
-        {
-            //XmlSerializer xs = new XmlSerializer(typeof(Competition));
-            //using (Stream s = File.Create("test.xml"))
-            //    xs.Serialize(s, this);
-        }
-
     }
 }
