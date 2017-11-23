@@ -84,8 +84,10 @@ namespace Testing
             //        Console.WriteLine(sss.Subject);
             //    }
             //}
-            genxml();
-            genxml1();
+            //genxml();
+            //genxml1();
+            s1.SaveXML();
+            //s10.SaveXML();
             Console.WriteLine();
             Console.WriteLine("ending");
 
@@ -93,27 +95,43 @@ namespace Testing
         }
         static void genxml1()
         {
-            XDocument xDoc;// = new XDocument();
-            if (File.Exists("test.xml"))
+            XDocument xDoc;
+            XElement root;
+            XAttribute rootAttrName;
+            try
             {
-                try
-                {
-                    xDoc = XDocument.Load("test.xml");
-                }
-                catch
-                {
-
-                }
+                xDoc = XDocument.Load("test.xml");
+                root = xDoc.Root;
+                Console.WriteLine("Loaded well");
             }
-            
-            XElement root = new XElement("test");
-            XAttribute rootAttrName = new XAttribute("rootAttr", "root attr content");
-            XElement node = new XElement("node", "node content");
+            catch
+            {
+                Console.WriteLine("Error, file not found");
+                xDoc = new XDocument();
+                root = new XElement("students");
+                rootAttrName = new XAttribute("rootAttr", "root attr content");
+                root.Add(rootAttrName);
+                xDoc.Add(root);
+            }
+            XElement studentElement = new XElement("student");
+            XAttribute nodeAttrName = new XAttribute("studAttr", "stud attr content");
+            studentElement.Add(nodeAttrName);
+            XElement innerNode = new XElement("innerNode", "innerNode  node content");
+            foreach (var x in xDoc.Element("students").Elements("student"))
+            {
+                if ( x.HasAttributes && (x.Attribute("studAttr").Value == "stud attr content1"))
 
-            root.Add(rootAttrName);
-            root.Add(node);
-            root.Add(node);
-            xDoc.Add(root);
+                Console.WriteLine("asd");
+            }
+            studentElement.Add(innerNode);
+            studentElement.Add(innerNode);
+
+
+
+            //root.Add(node);
+            //root.Add(node);
+            xDoc.Element("students").Add(studentElement);
+                       
             xDoc.Save("test.xml");
             Console.WriteLine("+++++++++++");
         }

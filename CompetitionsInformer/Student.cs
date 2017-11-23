@@ -11,7 +11,7 @@ namespace CompetitionsInformer
     public class Student : Person, IParticipant
     {
         public List<Skill> Skills { get; private set; }
-        private List<IAdvisor> advisors { get; set; }
+        private List<IAdvisor> advisors;
 
         public Student(string name) : base(name)
         {
@@ -79,66 +79,53 @@ namespace CompetitionsInformer
 
         public void SaveXML()
         {
-            XDocument xdoc = new XDocument(); 
-            // создаем корневой элемент
-            XElement students = new XElement("students");
-            
-            // создаем первый элемент
-            XElement student = new XElement("student");
-            // создаем атрибут
-            XAttribute studentNameAttr = new XAttribute("name", Name);            
-            student.Add(studentNameAttr);
-
-            foreach (var s in Skills)
+            XDocument xDoc;
+            XElement root;
+            XElement studentElement = new XElement("student");
+            XAttribute studentAttrName = new XAttribute("name", this.Name);
+            XElement skillElement;
+            XElement subjectElement;
+            XElement levelElement;
+            try
             {
-                XElement skillElem = new XElement("skill");
-                XAttribute skillSubjectAttr = new XAttribute("subject", s.Subject.ToString());
-                XElement subjectElem = new XElement("subject", s.Subject.ToString());
-                XElement levelElem = new XElement("level", s.Level);
-                skillElem.Add(skillSubjectAttr);
-                skillElem.Add(subjectElem);
-                skillElem.Add(levelElem);
-                student.Add(skillElem);
+                xDoc = XDocument.Load("students.xml");
+                root = xDoc.Root;
+                Console.WriteLine("students.xml loaded well");
+                //if (!(root.Elements("student").Attributes("name").Contains(this.Name)))
+                studentElement.Add(studentAttrName);
+                foreach (var skill in Skills)
+                {
+                    skillElement = new XElement("skill");
+                    subjectElement = new XElement("subject", skill.Subject.ToString());
+                    levelElement = new XElement("level", skill.Level);
+                    skillElement.Add(subjectElement);
+                    skillElement.Add(levelElement);
+                    studentElement.Add(skillElement);
+                }
+                xDoc.Element("students").Add(studentElement);
             }
-            students.Add(student);
-            xdoc.Add(students);
-            xdoc.Save("students.xml");
-        }
-
-        public void SaveXML1()
-        {
-            XDocument xdoc;
-            XElement student = new XElement("student");
-            XAttribute studentNameAttr = new XAttribute("name", Name);
-            student.Add(studentNameAttr);
-            XElement students;
-
-            if (File.Exists("students1.xml"))
+            catch
             {
-                xdoc = XDocument.Load("students1.xml");
-                students = xdoc.Element("students");
-            }
-            else
-            {
-                xdoc = new XDocument();
-                students = new XElement("students");
-                //XAttribute studentNameAttr = new XAttribute("name", Name);                
-            }
-
-            foreach (var s in Skills)
-            {
-                XElement skillElem = new XElement("skill");
-                XAttribute skillSubjectAttr = new XAttribute("subject", s.Subject.ToString());
-                XElement subjectElem = new XElement("subject", s.Subject.ToString());
-                XElement levelElem = new XElement("level", s.Level);
-                skillElem.Add(skillSubjectAttr);
-                skillElem.Add(subjectElem);
-                skillElem.Add(levelElem);
-                student.Add(skillElem);
-                students.Add(student);
+                Console.WriteLine("Error, file students.xml not found or corrupted");
+                xDoc = new XDocument();
+                root = new XElement("students");
+                studentElement = new XElement("student");
+                studentAttrName = new XAttribute("name", this.Name);
+                studentElement.Add(studentAttrName);
+                foreach(var skill in Skills)
+                {
+                    skillElement = new XElement("skill");
+                    subjectElement = new XElement("subject", skill.Subject.ToString());
+                    levelElement = new XElement("level", skill.Level);
+                    skillElement.Add(subjectElement);
+                    skillElement.Add(levelElement);
+                    studentElement.Add(skillElement);
+                }
+                xDoc.Add(root);
             }
 
-            xdoc.Save("students1.xml");
+            xDoc.Save("students.xml");
+            Console.WriteLine("+++++++++++");
         }
 
         public static List<Student> LoadXML()
@@ -149,11 +136,11 @@ namespace CompetitionsInformer
 
             foreach (XElement el in xdoc.Element("students").Elements("student"))
             {
-                temp = ( new Student( el.Attribute("name").Value.ToString() ) );
+                temp = (new Student(el.Attribute("name").Value.ToString()));
 
                 foreach (XElement elem in el.Elements("skill"))
                 {
-                    Subject subject = (Subject) Enum.Parse(typeof(Subject), elem.Element("subject").Value.ToString());                    
+                    Subject subject = (Subject)Enum.Parse(typeof(Subject), elem.Element("subject").Value.ToString());
                     int level = int.Parse(elem.Element("level").Value.ToString());
                     temp.AddSkill(subject, level);
                 }
