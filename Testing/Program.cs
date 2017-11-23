@@ -1,6 +1,9 @@
 ﻿using CompetitionsInformer;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Testing
 {
@@ -81,15 +84,68 @@ namespace Testing
             //        Console.WriteLine(sss.Subject);
             //    }
             //}
-
-            s1.SaveXML();
-            s2.SaveXML1();
-            s3.SaveXML1();
-
+            genxml();
+            genxml1();
             Console.WriteLine();
             Console.WriteLine("ending");
 
             Console.ReadLine();
+        }
+        static void genxml1()
+        {
+            XDocument xDoc;// = new XDocument();
+            if (File.Exists("test.xml"))
+            {
+                try
+                {
+                    xDoc = XDocument.Load("test.xml");
+                }
+                catch
+                {
+
+                }
+            }
+            
+            XElement root = new XElement("test");
+            XAttribute rootAttrName = new XAttribute("rootAttr", "root attr content");
+            XElement node = new XElement("node", "node content");
+
+            root.Add(rootAttrName);
+            root.Add(node);
+            root.Add(node);
+            xDoc.Add(root);
+            xDoc.Save("test.xml");
+            Console.WriteLine("+++++++++++");
+        }
+        static void genxml()
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load("users.xml");
+            // получим корневой элемент
+            XmlElement xRoot = xDoc.DocumentElement;
+            // обход всех узлов в корневом элементе
+            foreach (XmlNode xnode in xRoot)
+            {
+                // получаем атрибут name
+                if (xnode.Attributes.Count > 0)
+                {
+                    XmlNode attr = xnode.Attributes.GetNamedItem("name");
+                    if (attr != null)
+                        Console.WriteLine(attr.Value);
+                }
+                // обходим все дочерние узлы элемента user
+                foreach (XmlNode childNode in xnode.ChildNodes)
+                {
+                    if (childNode.Name == "skill")
+                    {
+                        foreach (XmlNode innerNode in childNode.ChildNodes)
+                        {
+                            Console.WriteLine($"{innerNode.Name}\t{innerNode.InnerText}");
+                        }
+                    }
+                }
+                Console.WriteLine("____________");
+            }
         }
     }
 }
