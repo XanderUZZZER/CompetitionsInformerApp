@@ -69,7 +69,7 @@ namespace CompetitionsInformer
             return advisors;
         }
 
-        public void RemoveAdviser(IAdvisor advisor)
+        public void RemoveAdvisor(IAdvisor advisor)
         {
             if (advisors.Contains(advisor))
             {
@@ -91,7 +91,44 @@ namespace CompetitionsInformer
                 xDoc = XDocument.Load("students.xml");
                 root = xDoc.Root;
                 Console.WriteLine("students.xml loaded well");
-                //if (!(root.Elements("student").Attributes("name").Contains(this.Name)))
+
+                if ((!root.HasElements) || (root.Elements("student").Attributes("name").Any(c => c.Value != this.Name)))
+                {
+
+                    studentElement.Add(studentAttrName);
+                    foreach (var skill in Skills)
+                    {
+                        skillElement = new XElement("skill");
+                        subjectElement = new XElement("subject", skill.Subject.ToString());
+                        levelElement = new XElement("level", skill.Level);
+                        skillElement.Add(subjectElement);
+                        skillElement.Add(levelElement);
+                        studentElement.Add(skillElement);
+                    }
+                    root.Add(studentElement);
+                }
+                else if (root.Elements("student").Attributes("name").Any(attrValue => attrValue.Value == this.Name))
+                {
+                    foreach (var skill in Skills)
+                    {
+                        if (root.Elements("student").Elements("skill").Elements("subject").Any(x => x.Value != skill.Subject.ToString()))
+                        {
+                            skillElement = new XElement("skill");
+                            subjectElement = new XElement("subject", skill.Subject.ToString());
+                            levelElement = new XElement("level", skill.Level);
+                            skillElement.Add(subjectElement);
+                            skillElement.Add(levelElement);
+                            root.Elements("student").Where(c => c.Attribute("name").Value == this.Name).First().Add(skillElement);
+                        }
+
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error, file students.xml not found or corrupted");
+                xDoc = new XDocument();
+                root = new XElement("students");
                 studentElement.Add(studentAttrName);
                 foreach (var skill in Skills)
                 {
@@ -102,25 +139,7 @@ namespace CompetitionsInformer
                     skillElement.Add(levelElement);
                     studentElement.Add(skillElement);
                 }
-                xDoc.Element("students").Add(studentElement);
-            }
-            catch
-            {
-                Console.WriteLine("Error, file students.xml not found or corrupted");
-                xDoc = new XDocument();
-                root = new XElement("students");
-                studentElement = new XElement("student");
-                studentAttrName = new XAttribute("name", this.Name);
-                studentElement.Add(studentAttrName);
-                foreach(var skill in Skills)
-                {
-                    skillElement = new XElement("skill");
-                    subjectElement = new XElement("subject", skill.Subject.ToString());
-                    levelElement = new XElement("level", skill.Level);
-                    skillElement.Add(subjectElement);
-                    skillElement.Add(levelElement);
-                    studentElement.Add(skillElement);
-                }
+                root.Add(studentElement);
                 xDoc.Add(root);
             }
 
@@ -130,23 +149,31 @@ namespace CompetitionsInformer
 
         public static List<Student> LoadXML()
         {
-            XDocument xdoc = XDocument.Load("students.xml");
-            List<Student> students = new List<Student>();
-            Student temp;
-
-            foreach (XElement el in xdoc.Element("students").Elements("student"))
+            try
             {
-                temp = (new Student(el.Attribute("name").Value.ToString()));
+                XDocument xdoc = XDocument.Load("students.xml");
+                List<Student> students = new List<Student>();
+                Student temp;
 
-                foreach (XElement elem in el.Elements("skill"))
+                foreach (XElement el in xdoc.Element("students").Elements("student"))
                 {
-                    Subject subject = (Subject)Enum.Parse(typeof(Subject), elem.Element("subject").Value.ToString());
-                    int level = int.Parse(elem.Element("level").Value.ToString());
-                    temp.AddSkill(subject, level);
+                    temp = (new Student(el.Attribute("name").Value.ToString()));
+
+                    foreach (XElement elem in el.Elements("skill"))
+                    {
+                        Subject subject = (Subject)Enum.Parse(typeof(Subject), elem.Element("subject").Value.ToString());
+                        int level = int.Parse(elem.Element("level").Value.ToString());
+                        temp.AddSkill(subject, level);
+                    }
+                    students.Add(temp);
                 }
-                students.Add(temp);
+                return students;
             }
-            return students;
+            catch
+            {
+                Console.WriteLine("File is empty or corrupted");
+                return new List<Student>();
+            }
         }
     }
 }

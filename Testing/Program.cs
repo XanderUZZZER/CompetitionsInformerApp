@@ -35,6 +35,7 @@ namespace Testing
             Student s11 = new Student("Student11");
             Competition ci = new Competition("Inform open", Subject.ComputerScience, "KNURE", DateTime.Parse("2017/12/25"), RegionLevel.Local);
             s1.AddSkill(Subject.ComputerScience);
+            s1.AddSkill(Subject.Biology);
             s2.AddSkill(Subject.ComputerScience);
             s3.AddSkill(Subject.ComputerScience);
             s4.AddSkill(Subject.ComputerScience);
@@ -72,22 +73,27 @@ namespace Testing
 
             //ci.GetWinners();
 
-            //List<Student> s = new List<Student>();
-            //s = Student.LoadXML();
+            List<Student> s = new List<Student>();
+            s = Student.LoadXML();
 
-            //foreach (var ss in s)
-            //{
-            //    Console.WriteLine(ss.Name);
-            //    foreach(var sss in ss.Skills)
-            //    {
-            //        Console.WriteLine(sss.Level);
-            //        Console.WriteLine(sss.Subject);
-            //    }
-            //}
+            foreach (var ss in s)
+            {
+                Console.WriteLine(ss.Name);
+                foreach (var sss in ss.Skills)
+                {                    
+                    Console.WriteLine($"subject: {sss.Subject}");
+                    Console.WriteLine($"level: {sss.Level}");
+                }
+                Console.WriteLine("________________________");
+            }
+            foreach (Student ssss in s)
+            {
+                ssss.SaveXML();
+            }
             //genxml();
             //genxml1();
             s1.SaveXML();
-            //s10.SaveXML();
+            s10.SaveXML();
             Console.WriteLine();
             Console.WriteLine("ending");
 
