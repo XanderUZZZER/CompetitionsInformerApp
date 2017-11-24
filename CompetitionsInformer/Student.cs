@@ -182,7 +182,7 @@ namespace CompetitionsInformer
                 
                 foreach (var sk in Skills)
                 {
-                    tempList.Select(student => student.Skills).Select(dd =>
+                    var w = tempList.Select(student => student.Skills);
                     
                 }
             }

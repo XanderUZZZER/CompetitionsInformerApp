@@ -92,7 +92,7 @@ namespace Testing
             }
             //genxml();
             //genxml1();
-            s1.SaveXML();
+            s1.SaveXML1();
             s10.SaveXML();
             Console.WriteLine();
             Console.WriteLine("ending");
