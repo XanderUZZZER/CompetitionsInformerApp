@@ -149,30 +149,48 @@ namespace CompetitionsInformer
 
         public static List<Student> LoadXML()
         {
+            List<Student> students = new List<Student>();
             try
             {
-                XDocument xdoc = XDocument.Load("students.xml");
-                List<Student> students = new List<Student>();
-                Student temp;
-
+                XDocument xdoc = XDocument.Load("students.xml");                
+                Student currentStudent;
                 foreach (XElement el in xdoc.Element("students").Elements("student"))
-                {
-                    temp = (new Student(el.Attribute("name").Value.ToString()));
-
+                {                    
+                    currentStudent = (new Student(el.Attribute("name").Value.ToString()));
                     foreach (XElement elem in el.Elements("skill"))
                     {
                         Subject subject = (Subject)Enum.Parse(typeof(Subject), elem.Element("subject").Value.ToString());
                         int level = int.Parse(elem.Element("level").Value.ToString());
-                        temp.AddSkill(subject, level);
+                        currentStudent.AddSkill(subject, level);
                     }
-                    students.Add(temp);
-                }
-                return students;
+                    students.Add(currentStudent);
+                }                
             }
             catch
             {
                 Console.WriteLine("File is empty or corrupted");
-                return new List<Student>();
+            }
+            return students;
+        }
+        public void SaveXML1()
+        {
+            List<Student> tempList = LoadXML();
+            if (tempList.Select(ss => ss.Name).Contains(this.Name))
+            {
+
+                //var ss = tempList.Select(s => s.Skills).Contains(this.Skills.Any(xx => xx.Subject;
+                
+                foreach (var sk in Skills)
+                {
+                    tempList.Select(student => student.Skills).Select(dd =>
+                    
+                }
+            }
+            //else if ( tempList.Any(student => student.Name == this.Name) &&
+              //        tempList.se.Any(student => student.Skills.Any(skill => skill.Subject == this.Skills.Any( )
+            else
+            {
+                tempList.Add(this);
             }
         }
     }
