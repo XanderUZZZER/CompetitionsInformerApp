@@ -86,90 +86,16 @@ namespace Testing
                 }
                 Console.WriteLine("________________________");
             }
-            foreach (Student ssss in s)
-            {
-                ssss.SaveXML();
-            }
-            //genxml();
-            //genxml1();
-            s1.SaveXML1();
+            s1.SaveXML();
             s10.SaveXML();
-            Console.WriteLine();
+            s11.SaveXML();           
+            s3.AddSkill(Subject.History, 89);
+            s3.SaveXML();
+            s5.SaveXML();
+            Console.WriteLine("--------->>>>>>>>>>>>>>>>>>");
             Console.WriteLine("ending");
 
             Console.ReadLine();
-        }
-        static void genxml1()
-        {
-            XDocument xDoc;
-            XElement root;
-            XAttribute rootAttrName;
-            try
-            {
-                xDoc = XDocument.Load("test.xml");
-                root = xDoc.Root;
-                Console.WriteLine("Loaded well");
-            }
-            catch
-            {
-                Console.WriteLine("Error, file not found");
-                xDoc = new XDocument();
-                root = new XElement("students");
-                rootAttrName = new XAttribute("rootAttr", "root attr content");
-                root.Add(rootAttrName);
-                xDoc.Add(root);
-            }
-            XElement studentElement = new XElement("student");
-            XAttribute nodeAttrName = new XAttribute("studAttr", "stud attr content");
-            studentElement.Add(nodeAttrName);
-            XElement innerNode = new XElement("innerNode", "innerNode  node content");
-            foreach (var x in xDoc.Element("students").Elements("student"))
-            {
-                if ( x.HasAttributes && (x.Attribute("studAttr").Value == "stud attr content1"))
-
-                Console.WriteLine("asd");
-            }
-            studentElement.Add(innerNode);
-            studentElement.Add(innerNode);
-
-
-
-            //root.Add(node);
-            //root.Add(node);
-            xDoc.Element("students").Add(studentElement);
-                       
-            xDoc.Save("test.xml");
-            Console.WriteLine("+++++++++++");
-        }
-        static void genxml()
-        {
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load("users.xml");
-            // получим корневой элемент
-            XmlElement xRoot = xDoc.DocumentElement;
-            // обход всех узлов в корневом элементе
-            foreach (XmlNode xnode in xRoot)
-            {
-                // получаем атрибут name
-                if (xnode.Attributes.Count > 0)
-                {
-                    XmlNode attr = xnode.Attributes.GetNamedItem("name");
-                    if (attr != null)
-                        Console.WriteLine(attr.Value);
-                }
-                // обходим все дочерние узлы элемента user
-                foreach (XmlNode childNode in xnode.ChildNodes)
-                {
-                    if (childNode.Name == "skill")
-                    {
-                        foreach (XmlNode innerNode in childNode.ChildNodes)
-                        {
-                            Console.WriteLine($"{innerNode.Name}\t{innerNode.InnerText}");
-                        }
-                    }
-                }
-                Console.WriteLine("____________");
-            }
-        }
+        }        
     }
 }
