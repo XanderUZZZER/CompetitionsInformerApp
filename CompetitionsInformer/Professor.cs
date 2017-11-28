@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompetitionsInformer
 {
-    public class Professor : Person, IAdvisor
+    public class Professor : Person, IAdvisor<Person>
     {
         public Subject Subject { get; }
 

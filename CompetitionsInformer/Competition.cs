@@ -17,8 +17,8 @@ namespace CompetitionsInformer
         public string Place { get; }
         public DateTime Date { get; }
         public RegionLevel RegionLevel { get; }
-        public List<IParticipant> Participants { get; private set; }
-        public Dictionary<Tour, List<IParticipant>> Winners { get; private set; } = new Dictionary<Tour, List<IParticipant>>();
+        public List<IParticipant<Person>> Participants { get; private set; }
+        public Dictionary<Tour, List<IParticipant<Person>>> Winners { get; private set; } = new Dictionary<Tour, List<IParticipant<Person>>>();
 
         public Competition()
         {
@@ -27,8 +27,8 @@ namespace CompetitionsInformer
             Place = "Place";
             Date = new DateTime(2017, 11, 12);
             RegionLevel = RegionLevel.Country;
-            Participants = new List<IParticipant>();
-            Winners = new Dictionary<Tour, List<IParticipant>>();
+            Participants = new List<IParticipant<Person>>();
+            Winners = new Dictionary<Tour, List<IParticipant<Person>>>();
         }
 
         public Competition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
@@ -38,10 +38,10 @@ namespace CompetitionsInformer
             Place = place;
             Date = date;
             RegionLevel = regionLevel;
-            Participants = new List<IParticipant>();
+            Participants = new List<IParticipant<Person>>();
         }
 
-        public void RegisterParticipant(IParticipant participant)
+        public void RegisterParticipant(IParticipant<Person> participant)
         {
             if ((!Participants.Contains(participant)) &&
                 (participant.HasSkill(Subject)))
@@ -50,7 +50,7 @@ namespace CompetitionsInformer
             }
         }
 
-        public void RegisterParticipant(List<IParticipant> participants)
+        public void RegisterParticipant(List<IParticipant<Person>> participants)
         {
             foreach (var participant in participants)
             {
@@ -63,6 +63,10 @@ namespace CompetitionsInformer
             HoldCompetitionTour(Tour.QuarterFinals);
             HoldCompetitionTour(Tour.SemiFinals);
             HoldCompetitionTour(Tour.Finals);
+            foreach (var winner in Winners[Tour.Finals].Take(3))
+            {
+                winner.AddWin(Subject);
+            }
         }
 
         private void HoldCompetitionTour(Tour tour)

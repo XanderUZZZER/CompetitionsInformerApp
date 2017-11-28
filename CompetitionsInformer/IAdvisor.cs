@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CompetitionsInformer
 {
-    public interface IAdvisor
+    public interface IAdvisor<T> where T : Person
     {
         Subject Subject { get; }
     }

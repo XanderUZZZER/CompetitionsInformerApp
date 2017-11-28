@@ -8,15 +8,17 @@ using System.Xml.Linq;
 
 namespace CompetitionsInformer
 {
-    public class Student : Person, IParticipant
+    public class Student : Person, IParticipant<Person>
     {
         public List<Skill> Skills { get; private set; }
-        private List<IAdvisor> advisors;
+        public List<IAdvisor<Person>> Advisors { get; private set; }
+        public Dictionary<Subject, int> Wins { get; private set; }
 
         public Student(string name) : base(name)
         {
             Skills = new List<Skill>();
-            advisors = new List<IAdvisor>();
+            Advisors = new List<IAdvisor<Person>>();
+            Wins = new Dictionary<Subject, int>();
         }
 
         public bool HasSkill(Subject subject)
@@ -27,7 +29,10 @@ namespace CompetitionsInformer
         public void AddSkill(Subject subject)
         {
             if (!HasSkill(subject))
+            {
                 Skills.Add(new Skill(subject));
+                Wins[subject] = 0;
+            }
         }
 
         public void AddSkill(Subject subject, int level)
@@ -35,6 +40,7 @@ namespace CompetitionsInformer
             if (!HasSkill(subject))
             {
                 Skills.Add(new Skill(subject, level));
+                Wins[subject] = 0;
             }
         }
 
@@ -52,12 +58,17 @@ namespace CompetitionsInformer
             Skills.Remove(Skills.Where(s => s.Subject == subject).First());
         }
 
+        public List<Skill> GetSkills()
+        {
+            return Skills;
+        }
+
         public int GetSkillLevel(Subject subject)
         {
             if (HasSkill(subject))
             {
                 double bonus = 1;
-                foreach (var advisor in advisors)
+                foreach (var advisor in Advisors)
                 {
                     if (advisor.Subject == subject)
                     {
@@ -69,30 +80,35 @@ namespace CompetitionsInformer
             return -1;
         }
 
-        public void AddAdvisor(IAdvisor advisor)
+        public void AddAdvisor(IAdvisor<Person> advisor)
         {
-            if (!advisors.Contains(advisor))
+            if (!Advisors.Contains(advisor) && Skills.Select(skill => skill.Subject).Contains(advisor.Subject))
             {
-                advisors.Add(advisor);
+                Advisors.Add(advisor);
             }
         }
 
-        public List<IAdvisor> GetAdvisors()
+        public List<IAdvisor<Person>> GetAdvisors()
         {
-            return advisors;
+            return Advisors;
         }
 
-        public void RemoveAdvisor(IAdvisor advisor)
+        public void RemoveAdvisor(IAdvisor<Person> advisor)
         {
-            if (advisors.Contains(advisor))
+            if (Advisors.Contains(advisor))
             {
-                advisors.Remove(advisor);
+                Advisors.Remove(advisor);
             }
-        }        
+        }
 
-        public static List<Student> LoadXML()
+        public void AddWin(Subject subject)
         {
-            List<Student> students = new List<Student>();
+            Wins[subject]++;
+        }
+
+        public static List<IParticipant<Person>> LoadXML()
+        {
+            List<IParticipant<Person>> students = new List<IParticipant<Person>>();
             try
             {
                 XDocument xdoc = XDocument.Load("students.xml");
@@ -104,7 +120,13 @@ namespace CompetitionsInformer
                     {
                         Subject subject = (Subject)Enum.Parse(typeof(Subject), elem.Element("subject").Value.ToString());
                         int level = int.Parse(elem.Element("level").Value.ToString());
+                        int wins = int.Parse(elem.Element("wins").Value.ToString());
                         currentStudent.AddSkill(subject, level);
+                        currentStudent.Wins[subject] = wins;
+                        foreach (var advisorElement in elem.Elements("advisor"))
+                        {
+                            currentStudent.AddAdvisor(new Professor(advisorElement.Value, subject));
+                        }
                     }
                     students.Add(currentStudent);
                 }
@@ -115,27 +137,19 @@ namespace CompetitionsInformer
             }
             return students;
         }
+
         public void SaveXML()
         {
-            List<Student> tempList = LoadXML();
-            if (tempList.Select(student => student.Name).Contains(this.Name))
+            List<IParticipant<Person>> tempStudents = LoadXML();
+            if (tempStudents.Select(student => ((Person)student).Name).Contains(this.Name))
             {
-                Student currentStudent = tempList.First(student => student.Name == this.Name);
-                foreach (var skill in Skills)
-                {
-                    if (!tempList.First(student => student.Name == this.Name).Skills.Select(s => s.Subject).Contains(skill.Subject))
-                    {
-                        tempList.First(student => student.Name == this.Name).AddSkill(skill.Subject, skill.Level);
-                    }
-                    else if (!tempList.First(student => student.Name == this.Name).Skills.Select(s => s.Level).Contains(skill.Level))
-                    {
-                        tempList.First(student => student.Name == this.Name).AlterSkillLevel(skill.Subject, skill.Level);
-                    }
-                }
+                IParticipant<Person> currentStudent = tempStudents.First(student => ((Person)student).Name == this.Name);
+                tempStudents.Remove(currentStudent);
+                tempStudents.Add(this);
             }
             else
             {
-                tempList.Add(this);
+                tempStudents.Add(this);
             }
 
             XDocument xDoc = new XDocument();
@@ -145,23 +159,42 @@ namespace CompetitionsInformer
             XElement skillElement;
             XElement subjectElement;
             XElement levelElement;
+            XElement winElement;
+            XElement advisorElement;
 
-            foreach (var student in tempList)
+            foreach (var student in tempStudents.OrderBy(s => ((Person)s).Name))
             {
                 studentElement = new XElement("student");
-                studentAttrName = new XAttribute("name", student.Name);
-                foreach (var skill in student.Skills)
+                studentAttrName = new XAttribute("name", ((Person)student).Name);
+                foreach (var skill in ((Student)student).Skills)
                 {
                     skillElement = new XElement("skill");
                     subjectElement = new XElement("subject", skill.Subject.ToString());
                     levelElement = new XElement("level", skill.Level);
+                    if (((Student)student).Wins.ContainsKey(skill.Subject))
+                    {
+                        winElement = new XElement("wins", ((Student)student).Wins[skill.Subject]);
+                    }
+                    else
+                    {
+                        winElement = new XElement("wins", 0);
+                    }
                     skillElement.Add(subjectElement);
                     skillElement.Add(levelElement);
+                    skillElement.Add(winElement);
+                    foreach (var advisor in ((Student)student).Advisors)
+                    {
+                        if (advisor.Subject == skill.Subject)
+                        {
+                            advisorElement = new XElement("advisor", ((Person)advisor).Name);
+                            skillElement.Add(advisorElement);
+                        }
+                    }
                     studentElement.Add(skillElement);
                 }
                 studentElement.Add(studentAttrName);
                 root.Add(studentElement);
-            }            
+            }
             xDoc.Add(root);
             xDoc.Save("students.xml");
         }

@@ -9,8 +9,8 @@ namespace CompetitionsInformer
     public class Informer
     {
         public List<Competition> Competitions { get; private set; } = new List<Competition>();
-        public List<Student> Students { get; private set; } = new List<Student>();
-        public List<Professor> Professors { get; private set; } = new List<Professor>();
+        public List<IParticipant<Person>> Students { get; private set; } = new List<IParticipant<Person>>();
+        public List<IAdvisor<Person>> Professors { get; private set; } = new List<IAdvisor<Person>>();
 
         public void AddCompetition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
         {
