@@ -18,8 +18,7 @@ namespace CompetitionsInformerApp
         {
             InitializeComponent();
             informer = new Informer();
-            informer.AddCompetition("Test competition", Subject.ComputerScience,
-                                     "KNURE", DateTime.Parse("2017-11-12"), RegionLevel.Local);            
+            informer.AddCompetition("Test competition", Subject.ComputerScience, "KNURE", DateTime.Parse("2017-11-12"), RegionLevel.Local);            
         }
 
         private void AddCompetitionBtn_Click(object sender, EventArgs e)

@@ -9,22 +9,42 @@ namespace CompetitionsInformer
     public class Informer
     {
         public List<Competition> Competitions { get; private set; } = new List<Competition>();
-        public List<IParticipant<Person>> Students { get; private set; } = new List<IParticipant<Person>>();
-        public List<IAdvisor<Person>> Professors { get; private set; } = new List<IAdvisor<Person>>();
+        public List<IParticipant<Person>> Participants { get; private set; } = new List<IParticipant<Person>>();
+        public List<IAdvisor<Person>> Advisors { get; private set; } = new List<IAdvisor<Person>>();
+
+        public Informer()
+        {
+            AddParticipants(Student.LoadXML());
+        }
 
         public void AddCompetition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
         {
             Competitions.Add(new Competition(name, subject, place, date, regionLevel));
         }
 
-        public void AddStudent(string name)
+        public void AddParticipant(IParticipant<Person> participant)
         {
-            Students.Add(new Student(name));
+            Participants.Add(participant);
         }
 
-        public void AddProfessor(string name, Subject subject)
+        public void AddParticipants(List<IParticipant<Person>> participants)
         {
-            Professors.Add(new Professor(name, subject));
+            Participants.AddRange(participants);
+        }
+
+        public void RemoveParticipant(IParticipant<Person> participant)
+        {
+            Participants.Remove(participant);
+        }
+
+        public void AddAdvisor(IAdvisor<Person> advisor)
+        {
+            Advisors.Add(advisor);
+        }
+
+        public void AddAdvisors(List<IAdvisor<Person>> advisors)
+        {
+            Advisors.AddRange(advisors);
         }
 
         public void LoadXML()
