@@ -13,17 +13,31 @@ namespace CompetitionsInformerApp
 {
     public partial class AddCompetitionForm : Form
     {
-        private Competition competition;
-        public AddCompetitionForm()
+        private Informer informer;
+
+
+        public AddCompetitionForm(Informer informer)
         {
             InitializeComponent();
             cbSubject.DataSource = Enum.GetValues(typeof(Subject));
             cbRegion.DataSource = Enum.GetValues(typeof(RegionLevel));
+            this.informer = informer;
         }
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            competition = new Competition(tbName)
+            if (informer.AddCompetition(tbName.Text,
+                                        (Subject)cbSubject.SelectedItem,
+                                        tbPlace.Text,
+                                        dtpDate.Value,
+                                        (RegionLevel)cbRegion.SelectedItem))
+            {
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("The competitions has been alredy added");
+            }
         }
     }
 }

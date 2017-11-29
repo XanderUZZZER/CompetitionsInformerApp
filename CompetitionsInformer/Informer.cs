@@ -17,9 +17,14 @@ namespace CompetitionsInformer
             AddParticipants(Student.LoadXML());
         }
 
-        public void AddCompetition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
+        public bool AddCompetition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
         {
-            Competitions.Add(new Competition(name, subject, place, date, regionLevel));
+            if (!Competitions.Select(n => n.Name).Contains(name))
+            {
+                Competitions.Add(new Competition(name, subject, place, date, regionLevel));
+                return true;
+            }
+            return false;
         }
 
         public void AddParticipant(IParticipant<Person> participant)

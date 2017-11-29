@@ -13,44 +13,47 @@ namespace CompetitionsInformerApp
 {
     public partial class MainForm : Form
     {
-        private Informer informer;
+        public Informer informer { get; private set; }
         private AddCompetitionForm addCompetitionForm;
+
         public MainForm()
         {
             InitializeComponent();
             informer = new Informer();
-            informer.AddCompetition("Test competition", Subject.ComputerScience, "KNURE", DateTime.Parse("2017-11-12"), RegionLevel.Local);            
-            foreach (var c in informer.Competitions)
-            {                
-                {
-                    CompetitionsDGV.Rows.Add(c.Name, 
-                                             c.Subject.ToString(), 
-                                             c.Place,
-                                             c.Date.ToShortDateString(),
-                                             c.RegionLevel.ToString());
-                }                
-            }           
-            
+            //informer.AddCompetition("Test competition", Subject.ComputerScience, "KNURE", DateTime.Parse("2017-11-12"), RegionLevel.Local);
+            informer.Competitions.AddRange(Competition.LoadXML());
+            TableRefresh();
+        }
+
+        private void AddCompetitionForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            TableRefresh();
         }
 
         private void AddCompetitionBtn_Click(object sender, EventArgs e)
         {
-            addCompetitionForm = new AddCompetitionForm();
+            addCompetitionForm = new AddCompetitionForm(informer);
+            addCompetitionForm.FormClosing += AddCompetitionForm_FormClosing;
             addCompetitionForm.ShowDialog();
-            //foreach (var s in informer.Competitions)
-            //    s.SaveXML();
-            
-            //foreach (var c in informer.Competitions)
-            //{
-            //    foreach(var x in c.LoadXML())
-            //    {
-            //        CompetitionsDGV.Rows.Add(x.Name,
-            //                                 x.Subject.ToString(),
-            //                                 x.Place,
-            //                                 x.Date.ToShortDateString(),
-            //                                 x.RegionLevel.ToString());
-            //    }
-            //}
+        }
+
+        private void btRefresh_Click(object sender, EventArgs e)
+        {
+            TableRefresh();
+        }
+
+        private void TableRefresh()
+        {
+            CompetitionsDGV.Rows.Clear();
+            foreach (var c in informer.Competitions)
+            {
+                CompetitionsDGV.Rows.Add(c.Name,
+                                             c.Subject.ToString(),
+                                             c.Place,
+                                             c.Date.ToShortDateString(),
+                                             c.RegionLevel.ToString());
+                c.SaveXML();
+            }
         }
     }
 }

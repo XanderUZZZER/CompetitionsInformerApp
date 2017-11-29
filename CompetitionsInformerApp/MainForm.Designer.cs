@@ -35,6 +35,7 @@
             this.DateCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RegionLevelCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AddCompetitionBtn = new System.Windows.Forms.Button();
+            this.btRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CompetitionsDGV)).BeginInit();
             this.SuspendLayout();
             // 
@@ -87,11 +88,22 @@
             this.AddCompetitionBtn.UseVisualStyleBackColor = true;
             this.AddCompetitionBtn.Click += new System.EventHandler(this.AddCompetitionBtn_Click);
             // 
+            // btRefresh
+            // 
+            this.btRefresh.Location = new System.Drawing.Point(383, 229);
+            this.btRefresh.Name = "btRefresh";
+            this.btRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btRefresh.TabIndex = 2;
+            this.btRefresh.Text = "Refresh";
+            this.btRefresh.UseVisualStyleBackColor = true;
+            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 265);
+            this.Controls.Add(this.btRefresh);
             this.Controls.Add(this.AddCompetitionBtn);
             this.Controls.Add(this.CompetitionsDGV);
             this.Name = "MainForm";
@@ -110,6 +122,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PlaceCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn RegionLevelCol;
+        private System.Windows.Forms.Button btRefresh;
     }
 }
 

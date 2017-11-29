@@ -76,10 +76,9 @@ namespace CompetitionsInformer
             Winners[tour] = Participants.OrderByDescending(s => s.GetSkillLevel(Subject)).Take((int)tour).ToList();
         }
 
-        public List<Competition> LoadXML()
+        public static List<Competition> LoadXML()
         {
             List<Competition> competitions = new List<Competition>();
-            competitions.Add(this);
             try
             {
                 XDocument xdoc = XDocument.Load("competitions.xml");
@@ -96,14 +95,16 @@ namespace CompetitionsInformer
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
+                MessageBox.Show("File is corrupted");
             }
             return competitions;
         }
 
         public void SaveXML()
         {
-            List<Competition> tempCompetitions = LoadXML();  
+            List<Competition> tempCompetitions = LoadXML();
+            tempCompetitions.Add(this);
             XDocument xDoc = new XDocument();
             XElement root = new XElement("competitions");
             XElement competitionElement;
