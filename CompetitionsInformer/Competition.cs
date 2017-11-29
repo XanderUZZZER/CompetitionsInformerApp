@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -25,7 +27,7 @@ namespace CompetitionsInformer
             Name = "Name";
             Subject = Subject.Biology;
             Place = "Place";
-            Date = new DateTime(2017, 11, 12);
+            Date = new DateTime(2017, 11, 12);            
             RegionLevel = RegionLevel.Country;
             Participants = new List<IParticipant<Person>>();
             Winners = new Dictionary<Tour, List<IParticipant<Person>>>();
@@ -72,6 +74,62 @@ namespace CompetitionsInformer
         private void HoldCompetitionTour(Tour tour)
         {
             Winners[tour] = Participants.OrderByDescending(s => s.GetSkillLevel(Subject)).Take((int)tour).ToList();
+        }
+
+        public List<Competition> LoadXML()
+        {
+            List<Competition> competitions = new List<Competition>();
+            competitions.Add(this);
+            try
+            {
+                XDocument xdoc = XDocument.Load("competitions.xml");
+                foreach (XElement el in xdoc.Element("competitions").Elements("competition"))
+                {
+                    string name = el.Attribute("name").Value.ToString();
+                    Subject subject = (Subject)Enum.Parse(typeof(Subject), el.Element("subject").Value.ToString());
+                    string place = el.Element("place").Value.ToString();
+                    DateTime date = DateTime.ParseExact(el.Element("date").Value.ToString(), "dd.mm.yyyy", CultureInfo.InvariantCulture);
+                    //DateTime date1 = DateTime.Parse((el.Element("date").Value.ToString(), "dd.mm.yyyy", CultureInfo.InvariantCulture);
+                    RegionLevel region = (RegionLevel)Enum.Parse(typeof(RegionLevel), el.Element("region").Value.ToString());                    
+                    competitions.Add(new Competition(name, subject, place, date, region));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return competitions;
+        }
+
+        public void SaveXML()
+        {
+            List<Competition> tempCompetitions = LoadXML();  
+            XDocument xDoc = new XDocument();
+            XElement root = new XElement("competitions");
+            XElement competitionElement;
+            XAttribute competitionAttrName;
+            XElement subjectElement;
+            XElement placeElement;
+            XElement dateElement;
+            XElement reginLevelElement;
+
+            foreach (var competition in tempCompetitions)
+            {
+                competitionElement = new XElement("competition");
+                competitionAttrName = new XAttribute("name", competition.Name);
+                subjectElement = new XElement("subject", competition.Subject.ToString());
+                placeElement = new XElement("place", competition.Place); ;
+                dateElement = new XElement("date", competition.Date.ToShortDateString()); ;
+                reginLevelElement = new XElement("region", competition.RegionLevel.ToString());
+                competitionElement.Add(competitionAttrName);
+                competitionElement.Add(subjectElement);
+                competitionElement.Add(placeElement);
+                competitionElement.Add(dateElement);
+                competitionElement.Add(reginLevelElement);
+                root.Add(competitionElement);
+            }
+            xDoc.Add(root);
+            xDoc.Save("competitions.xml");
         }
     }
 }
