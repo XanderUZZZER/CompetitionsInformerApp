@@ -15,20 +15,19 @@ namespace CompetitionsInformerApp
     {
         public Informer informer { get; private set; }
         private AddCompetitionForm addCompetitionForm;
+        private AddParticipantForm addParticipantForm;
+        private string currName => CompetitionsDGV.CurrentRow.Cells[0].Value.ToString();
 
         public MainForm()
         {
             InitializeComponent();
             informer = new Informer();
-            //informer.AddCompetition("Test competition", Subject.ComputerScience, "KNURE", DateTime.Parse("2017-11-12"), RegionLevel.Local);
             informer.Competitions.AddRange(Competition.LoadXML());
+            informer.Participants.AddRange(Student.LoadXML());
             TableRefresh();
         }
 
-        private void AddCompetitionForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            TableRefresh();
-        }
+        
 
         private void AddCompetitionBtn_Click(object sender, EventArgs e)
         {
@@ -36,14 +35,21 @@ namespace CompetitionsInformerApp
             addCompetitionForm.FormClosing += AddCompetitionForm_FormClosing;
             addCompetitionForm.ShowDialog();
         }
-
-        private void btRefresh_Click(object sender, EventArgs e)
+        private void AddCompetitionForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             TableRefresh();
         }
 
-        private void TableRefresh()
+        private void btRefresh_Click(object sender, EventArgs e)
         {
+            if (!informer.Competitions.Where(n => n.Name == currName).First().WasHold)
+                informer.Competitions.Where(n => n.Name == currName).First().GetWinners();
+            TableRefresh();
+
+        }
+
+        private void TableRefresh()
+        {            
             CompetitionsDGV.Rows.Clear();
             foreach (var c in informer.Competitions)
             {
@@ -51,9 +57,23 @@ namespace CompetitionsInformerApp
                                              c.Subject.ToString(),
                                              c.Place,
                                              c.Date.ToShortDateString(),
-                                             c.RegionLevel.ToString());
+                                             c.RegionLevel.ToString(),
+                                             c.Participants.Count,
+                                             c.WasHold);
                 c.SaveXML();
             }
+        }
+
+        private void btAddParticipant_Click(object sender, EventArgs e)
+        { 
+            addParticipantForm = new AddParticipantForm(informer, currName);
+            addParticipantForm.FormClosing += AddParticipantForm_FormClosing;
+            addParticipantForm.ShowDialog();
+        }
+
+        private void AddParticipantForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            TableRefresh();
         }
     }
 }

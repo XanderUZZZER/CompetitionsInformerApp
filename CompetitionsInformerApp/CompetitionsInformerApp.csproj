@@ -52,6 +52,12 @@
     <Compile Include="AddCompetitionForm.Designer.cs">
       <DependentUpon>AddCompetitionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddParticipantForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddParticipantForm.Designer.cs">
+      <DependentUpon>AddParticipantForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +68,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AddCompetitionForm.resx">
       <DependentUpon>AddCompetitionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddParticipantForm.resx">
+      <DependentUpon>AddParticipantForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

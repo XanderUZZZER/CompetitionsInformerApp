@@ -21,6 +21,7 @@ namespace CompetitionsInformer
         public RegionLevel RegionLevel { get; }
         public List<IParticipant<Person>> Participants { get; private set; }
         public Dictionary<Tour, List<IParticipant<Person>>> Winners { get; private set; } = new Dictionary<Tour, List<IParticipant<Person>>>();
+        public bool WasHold { get; private set; } = false;
 
         public Competition()
         {
@@ -69,6 +70,7 @@ namespace CompetitionsInformer
             {
                 winner.AddWin(Subject);
             }
+            WasHold = true;
         }
 
         private void HoldCompetitionTour(Tour tour)
@@ -87,9 +89,9 @@ namespace CompetitionsInformer
                     string name = el.Attribute("name").Value.ToString();
                     Subject subject = (Subject)Enum.Parse(typeof(Subject), el.Element("subject").Value.ToString());
                     string place = el.Element("place").Value.ToString();
-                    DateTime date = DateTime.ParseExact(el.Element("date").Value.ToString(), "dd.mm.yyyy", CultureInfo.InvariantCulture);
+                    DateTime date = DateTime.ParseExact(el.Element("date").Value.ToString(), "dd.MM.yyyy", CultureInfo.InvariantCulture);
                     //DateTime date1 = DateTime.Parse((el.Element("date").Value.ToString(), "dd.mm.yyyy", CultureInfo.InvariantCulture);
-                    RegionLevel region = (RegionLevel)Enum.Parse(typeof(RegionLevel), el.Element("region").Value.ToString());                    
+                    RegionLevel region = (RegionLevel)Enum.Parse(typeof(RegionLevel), el.Element("region").Value.ToString()); 
                     competitions.Add(new Competition(name, subject, place, date, region));
                 }
             }
@@ -104,7 +106,10 @@ namespace CompetitionsInformer
         public void SaveXML()
         {
             List<Competition> tempCompetitions = LoadXML();
-            tempCompetitions.Add(this);
+            if (!tempCompetitions.Select(n => n.Name).Contains(this.Name))
+            {
+                tempCompetitions.Add(this);
+            }
             XDocument xDoc = new XDocument();
             XElement root = new XElement("competitions");
             XElement competitionElement;
@@ -113,6 +118,7 @@ namespace CompetitionsInformer
             XElement placeElement;
             XElement dateElement;
             XElement reginLevelElement;
+            XElement participantsElement;
 
             foreach (var competition in tempCompetitions)
             {
@@ -122,11 +128,13 @@ namespace CompetitionsInformer
                 placeElement = new XElement("place", competition.Place); ;
                 dateElement = new XElement("date", competition.Date.ToShortDateString()); ;
                 reginLevelElement = new XElement("region", competition.RegionLevel.ToString());
+                participantsElement = new XElement("region", competition.Participants.Count);
                 competitionElement.Add(competitionAttrName);
                 competitionElement.Add(subjectElement);
                 competitionElement.Add(placeElement);
                 competitionElement.Add(dateElement);
                 competitionElement.Add(reginLevelElement);
+                competitionElement.Add(participantsElement);
                 root.Add(competitionElement);
             }
             xDoc.Add(root);

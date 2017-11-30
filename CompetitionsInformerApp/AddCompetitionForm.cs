@@ -14,7 +14,11 @@ namespace CompetitionsInformerApp
     public partial class AddCompetitionForm : Form
     {
         private Informer informer;
-
+        private string name => tbName.Text;
+        private Subject subject => (Subject)cbSubject.SelectedItem;
+        private string place => tbPlace.Text;
+        private DateTime date => dtpDate.Value;
+        private RegionLevel region => (RegionLevel)cbRegion.SelectedItem;
 
         public AddCompetitionForm(Informer informer)
         {
@@ -26,17 +30,13 @@ namespace CompetitionsInformerApp
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            if (informer.AddCompetition(tbName.Text,
-                                        (Subject)cbSubject.SelectedItem,
-                                        tbPlace.Text,
-                                        dtpDate.Value,
-                                        (RegionLevel)cbRegion.SelectedItem))
+            if (informer.AddCompetition(name, subject, place, date, region))
             {
                 this.Close();
             }
             else
             {
-                MessageBox.Show("The competitions has been alredy added");
+                MessageBox.Show("The competition has been alredy added");
             }
         }
     }
