@@ -15,6 +15,7 @@ namespace CompetitionsInformer
         public Informer()
         {
             AddParticipants(Student.LoadXML());
+            AddCompetitions(Competition.LoadXML());
         }
 
         public bool AddCompetition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
@@ -50,6 +51,11 @@ namespace CompetitionsInformer
         public void AddAdvisors(List<IAdvisor<Person>> advisors)
         {
             Advisors.AddRange(advisors);
+        }
+
+        public void AddCompetitions(List<Competition> competitions)
+        {
+            Competitions.AddRange(competitions);
         }
 
         public void LoadXML()

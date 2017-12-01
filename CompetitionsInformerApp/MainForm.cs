@@ -22,12 +22,8 @@ namespace CompetitionsInformerApp
         {
             InitializeComponent();
             informer = new Informer();
-            informer.Competitions.AddRange(Competition.LoadXML());
-            informer.Participants.AddRange(Student.LoadXML());
             TableRefresh();
-        }
-
-        
+        }        
 
         private void AddCompetitionBtn_Click(object sender, EventArgs e)
         {
@@ -54,12 +50,12 @@ namespace CompetitionsInformerApp
             foreach (var c in informer.Competitions)
             {
                 CompetitionsDGV.Rows.Add(c.Name,
-                                             c.Subject.ToString(),
-                                             c.Place,
-                                             c.Date.ToShortDateString(),
-                                             c.RegionLevel.ToString(),
-                                             c.Participants.Count,
-                                             c.WasHold);
+                                         c.Subject.ToString(),
+                                         c.Place,
+                                         c.Date.ToShortDateString(),
+                                         c.RegionLevel.ToString(),
+                                         c.Participants.Count,
+                                         c.WasHold);
                 c.SaveXML();
             }
         }

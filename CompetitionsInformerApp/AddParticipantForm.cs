@@ -16,31 +16,40 @@ namespace CompetitionsInformerApp
         private Informer informer;
         private Competition competition;
         private List<IParticipant<Person>> participants;
-        private string name => tbName.Text;
+        private string currParticipantName => dgvParticipants.CurrentRow.Cells[0].Value.ToString();
 
         public AddParticipantForm(Informer informer, string competitionName)
         {
             InitializeComponent();
-            cbSubject.DataSource = Enum.GetValues(typeof(Subject));
             this.informer = informer;
             competition = informer.Competitions.Where(n => n.Name == competitionName).First();
-            participants = informer.Participants.Where(p => p.GetSkills().Select(s => s.Subject).Contains(competition.Subject)).ToList();
+            participants = informer.Participants.Where(p => (p.GetSkills().Select(s => s.Subject).Contains(competition.Subject)) &&
+                                                            !(competition.Participants.Contains(p))).ToList();
             TableRefresh();
         }
 
         private void btAdd_Click(object sender, EventArgs e)
         {
-            competition.Participants.Add(new Student(name));
+            competition.RegisterParticipant(participants.Where(p => ((Person)p).Name == currParticipantName).First());
             this.Close();
+
         }
 
         private void TableRefresh()
         {
             dgvParticipants.Rows.Clear();
-            foreach (var p in participants)            
+            if (participants.Count > 0)
             {
-                dgvParticipants.Rows.Add(((Person)p).Name, p.GetSkillLevel(competition.Subject), p.GetAdvisors().Count);                
+                foreach (var p in participants)
+                {
+                    dgvParticipants.Rows.Add(((Person)p).Name, p.GetSkillLevel(competition.Subject), p.GetAdvisors().Count);
+                }
+                btAdd.Enabled = true;
             }
+            else
+            {
+                btAdd.Enabled = false;
+            }            
         }
 
         private void btRefresh_Click(object sender, EventArgs e)

@@ -20,21 +20,10 @@ namespace CompetitionsInformer
         public DateTime Date { get; }
         public RegionLevel RegionLevel { get; }
         public List<IParticipant<Person>> Participants { get; private set; }
-        public Dictionary<Tour, List<IParticipant<Person>>> Winners { get; private set; } = new Dictionary<Tour, List<IParticipant<Person>>>();
+        public Dictionary<Tour, List<IParticipant<Person>>> Winners { get; private set; }
         public bool WasHold { get; private set; } = false;
 
-        public Competition()
-        {
-            Name = "Name";
-            Subject = Subject.Biology;
-            Place = "Place";
-            Date = new DateTime(2017, 11, 12);            
-            RegionLevel = RegionLevel.Country;
-            Participants = new List<IParticipant<Person>>();
-            Winners = new Dictionary<Tour, List<IParticipant<Person>>>();
-        }
-
-        public Competition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel)
+        public Competition(string name, Subject subject, string place, DateTime date, RegionLevel regionLevel, bool wasHold = false)
         {
             Name = name;
             Subject = subject;
@@ -42,6 +31,8 @@ namespace CompetitionsInformer
             Date = date;
             RegionLevel = regionLevel;
             Participants = new List<IParticipant<Person>>();
+            Winners = new Dictionary<Tour, List<IParticipant<Person>>>();
+            WasHold = wasHold;
         }
 
         public void RegisterParticipant(IParticipant<Person> participant)
@@ -90,9 +81,9 @@ namespace CompetitionsInformer
                     Subject subject = (Subject)Enum.Parse(typeof(Subject), el.Element("subject").Value.ToString());
                     string place = el.Element("place").Value.ToString();
                     DateTime date = DateTime.ParseExact(el.Element("date").Value.ToString(), "dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    //DateTime date1 = DateTime.Parse((el.Element("date").Value.ToString(), "dd.mm.yyyy", CultureInfo.InvariantCulture);
                     RegionLevel region = (RegionLevel)Enum.Parse(typeof(RegionLevel), el.Element("region").Value.ToString()); 
-                    competitions.Add(new Competition(name, subject, place, date, region));
+                    bool wasHold = Convert.ToBoolean(el.Element("hold").Value);
+                    competitions.Add(new Competition(name, subject, place, date, region, wasHold));
                 }
             }
             catch (Exception ex)
@@ -118,7 +109,7 @@ namespace CompetitionsInformer
             XElement placeElement;
             XElement dateElement;
             XElement reginLevelElement;
-            XElement participantsElement;
+            XElement holdElement;
 
             foreach (var competition in tempCompetitions)
             {
@@ -128,13 +119,13 @@ namespace CompetitionsInformer
                 placeElement = new XElement("place", competition.Place); ;
                 dateElement = new XElement("date", competition.Date.ToShortDateString()); ;
                 reginLevelElement = new XElement("region", competition.RegionLevel.ToString());
-                participantsElement = new XElement("region", competition.Participants.Count);
+                holdElement = new XElement("hold", competition.WasHold);
                 competitionElement.Add(competitionAttrName);
                 competitionElement.Add(subjectElement);
                 competitionElement.Add(placeElement);
                 competitionElement.Add(dateElement);
                 competitionElement.Add(reginLevelElement);
-                competitionElement.Add(participantsElement);
+                competitionElement.Add(holdElement);
                 root.Add(competitionElement);
             }
             xDoc.Add(root);

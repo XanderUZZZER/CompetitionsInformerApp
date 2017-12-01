@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             this.CompetitionsDGV = new System.Windows.Forms.DataGridView();
-            this.AddCompetitionBtn = new System.Windows.Forms.Button();
-            this.btRefresh = new System.Windows.Forms.Button();
-            this.btAddParticipant = new System.Windows.Forms.Button();
             this.NameCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SubjectCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PlaceCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,6 +36,8 @@
             this.RegionLevelCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.participantsCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.holdCol = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.AddCompetitionBtn = new System.Windows.Forms.Button();
+            this.btAddParticipant = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CompetitionsDGV)).BeginInit();
             this.SuspendLayout();
             // 
@@ -70,37 +69,6 @@
             this.CompetitionsDGV.ShowEditingIcon = false;
             this.CompetitionsDGV.Size = new System.Drawing.Size(660, 198);
             this.CompetitionsDGV.TabIndex = 0;
-            // 
-            // AddCompetitionBtn
-            // 
-            this.AddCompetitionBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AddCompetitionBtn.Location = new System.Drawing.Point(12, 229);
-            this.AddCompetitionBtn.Name = "AddCompetitionBtn";
-            this.AddCompetitionBtn.Size = new System.Drawing.Size(132, 23);
-            this.AddCompetitionBtn.TabIndex = 1;
-            this.AddCompetitionBtn.Text = "Add competition";
-            this.AddCompetitionBtn.UseVisualStyleBackColor = true;
-            this.AddCompetitionBtn.Click += new System.EventHandler(this.AddCompetitionBtn_Click);
-            // 
-            // btRefresh
-            // 
-            this.btRefresh.Location = new System.Drawing.Point(383, 229);
-            this.btRefresh.Name = "btRefresh";
-            this.btRefresh.Size = new System.Drawing.Size(75, 23);
-            this.btRefresh.TabIndex = 2;
-            this.btRefresh.Text = "Refresh";
-            this.btRefresh.UseVisualStyleBackColor = true;
-            this.btRefresh.Click += new System.EventHandler(this.btRefresh_Click);
-            // 
-            // btAddParticipant
-            // 
-            this.btAddParticipant.Location = new System.Drawing.Point(505, 229);
-            this.btAddParticipant.Name = "btAddParticipant";
-            this.btAddParticipant.Size = new System.Drawing.Size(105, 23);
-            this.btAddParticipant.TabIndex = 3;
-            this.btAddParticipant.Text = "Add participant";
-            this.btAddParticipant.UseVisualStyleBackColor = true;
-            this.btAddParticipant.Click += new System.EventHandler(this.btAddParticipant_Click);
             // 
             // NameCol
             // 
@@ -158,13 +126,34 @@
             this.holdCol.ReadOnly = true;
             this.holdCol.Width = 35;
             // 
+            // AddCompetitionBtn
+            // 
+            this.AddCompetitionBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AddCompetitionBtn.Location = new System.Drawing.Point(12, 229);
+            this.AddCompetitionBtn.Name = "AddCompetitionBtn";
+            this.AddCompetitionBtn.Size = new System.Drawing.Size(132, 23);
+            this.AddCompetitionBtn.TabIndex = 1;
+            this.AddCompetitionBtn.Text = "Add competition";
+            this.AddCompetitionBtn.UseVisualStyleBackColor = true;
+            this.AddCompetitionBtn.Click += new System.EventHandler(this.AddCompetitionBtn_Click);
+            // 
+            // btAddParticipant
+            // 
+            this.btAddParticipant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btAddParticipant.Location = new System.Drawing.Point(150, 229);
+            this.btAddParticipant.Name = "btAddParticipant";
+            this.btAddParticipant.Size = new System.Drawing.Size(153, 23);
+            this.btAddParticipant.TabIndex = 3;
+            this.btAddParticipant.Text = "Add participant";
+            this.btAddParticipant.UseVisualStyleBackColor = true;
+            this.btAddParticipant.Click += new System.EventHandler(this.btAddParticipant_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 265);
             this.Controls.Add(this.btAddParticipant);
-            this.Controls.Add(this.btRefresh);
             this.Controls.Add(this.AddCompetitionBtn);
             this.Controls.Add(this.CompetitionsDGV);
             this.Name = "MainForm";
@@ -178,7 +167,6 @@
 
         private System.Windows.Forms.DataGridView CompetitionsDGV;
         private System.Windows.Forms.Button AddCompetitionBtn;
-        private System.Windows.Forms.Button btRefresh;
         private System.Windows.Forms.Button btAddParticipant;
         private System.Windows.Forms.DataGridViewTextBoxColumn NameCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn SubjectCol;
